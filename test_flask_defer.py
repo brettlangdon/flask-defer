@@ -5,7 +5,7 @@ from flask_defer import FlaskDefer, defer, stack
 
 
 def deferred_task(name, with_keyword=False):
-    pass
+    return (name, with_keyword)
 
 
 class TestFlaskDefer(unittest.TestCase):
@@ -113,6 +113,10 @@ class TestFlaskDefer(unittest.TestCase):
                     func=deferred_task,
                     kwargs=dict(with_keyword=True, extra_param='param'),
                 ))
+
+    def test_no_app_context(self):
+        result = defer(deferred_task, 'name', with_keyword=True)
+        self.assertEqual(result, ('name', True))
 
 
 if __name__ == '__main__':
