@@ -19,6 +19,10 @@ Installation
 Usage
 ~~~~~
 
+Passing a function and it's arguments to `flask_defer.after_request` will register that function to execute when the Flask request has ended.
+
+If a call to `flask_defer.after_request` happens outside of a request context then the function will be executed immediately.
+
 .. code:: python
 
    from flask import Flask

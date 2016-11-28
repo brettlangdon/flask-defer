@@ -12,7 +12,7 @@ def get_long_description():
 
 setup(
     name='Flask-Defer',
-    version='1.0.0',
+    version='1.0.1',
     url='https://github.com/brettlangdon/flask-defer.git',
     license='MIT',
     author='Brett Langdon',

@@ -7,8 +7,14 @@ __all__ = ['after_request', 'defer', 'FlaskDefer']
 
 
 def defer(func, *args, **kwargs):
-    params = dict(func=func, args=args, kwargs=kwargs)
     ctx = stack.top
+
+    # If we are not in a request/app context, then just execute
+    if not ctx:
+        return func(*args, **kwargs)
+
+    # We are in a request/app context, defer until request/app teardown
+    params = dict(func=func, args=args, kwargs=kwargs)
     if not hasattr(ctx, 'deferred_tasks'):
         setattr(ctx, 'deferred_tasks', [])
     ctx.deferred_tasks.append(params)
