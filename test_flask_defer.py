@@ -1,7 +1,7 @@
 import unittest
 
-from flask import Flask
-from flask_defer import FlaskDefer, defer, stack
+from flask import Flask, _request_ctx_stack as stack
+from flask_defer import FlaskDefer, defer
 
 
 def deferred_task(name, with_keyword=False):

@@ -1,6 +1,15 @@
 Flask-Defer Changelog
 =====================
 
+Version 1.1.0
+-------------
+
+:Released: 11-29-2016
+
+:Changes:
+  Public API is the same, except now we only attach functions to the request context
+
+
 Version 1.0.1
 -------------
 

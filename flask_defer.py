@@ -1,17 +1,14 @@
-try:
-    from flask import _app_ctx_stack as stack
-except ImportError:
-    from flask import _request_ctx_stack as stack
+from flask import has_request_context, _request_ctx_stack
 
 __all__ = ['after_request', 'defer', 'FlaskDefer']
 
 
 def defer(func, *args, **kwargs):
-    ctx = stack.top
-
     # If we are not in a request/app context, then just execute
-    if not ctx:
+    if not has_request_context():
         return func(*args, **kwargs)
+
+    ctx = _request_ctx_stack.top
 
     # We are in a request/app context, defer until request/app teardown
     params = dict(func=func, args=args, kwargs=kwargs)
@@ -30,14 +27,10 @@ class FlaskDefer(object):
             self.init_app(app)
 
     def init_app(self, app):
-        if hasattr(app, 'teardown_appcontext'):
-            app.teardown_appcontext(self._execute_deferred)
-        else:
-            app.teardown_request(self._execute_deferred)
+        app.teardown_request(self._execute_deferred)
 
     def _execute_deferred(self, exception):
-        ctx = stack.top
+        ctx = _request_ctx_stack.top
         if hasattr(ctx, 'deferred_tasks'):
             for params in ctx.deferred_tasks:
-                # DEV: Do not try/except, let these function calls fail
                 params['func'](*params['args'], **params['kwargs'])
